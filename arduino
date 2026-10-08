@@ -1,0 +1,81 @@
+# Arduino:::writing{variant="document" id="39174" title="Arduino UNO IoT Energy Meter Code"}
+
+#include <SoftwareSerial.h>
+#include <PZEM004Tv30.h>
+
+// Arduino UNO pins
+// D10 = RX
+// D11 = TX
+SoftwareSerial pzemSerial(10, 11);
+
+PZEM004Tv30 pzem(pzemSerial);
+
+void setup()
+{
+  Serial.begin(9600);
+  pzemSerial.begin(9600);
+
+  Serial.println("IoT Energy Meter");
+  Serial.println("----------------");
+}
+
+void loop()
+{
+  float voltage   = pzem.voltage();
+  float current   = pzem.current();
+  float power     = pzem.power();
+  float energy    = pzem.energy();
+  float frequency = pzem.frequency();
+  float pf        = pzem.pf();
+
+  if (isnan(voltage))
+  {
+    Serial.println("PZEM communication error!");
+    delay(2000);
+    return;
+  }
+
+  Serial.print("Voltage: ");
+  Serial.print(voltage);
+  Serial.println(" V");
+
+  Serial.print("Current: ");
+  Serial.print(current);
+  Serial.println(" A");
+
+  Serial.print("Power: ");
+  Serial.print(power);
+  Serial.println(" W");
+
+  Serial.print("Energy: ");
+  Serial.print(energy);
+  Serial.println(" kWh");
+
+  Serial.print("Frequency: ");
+  Serial.print(frequency);
+  Serial.println(" Hz");
+
+  Serial.print("Power Factor: ");
+  Serial.println(pf);
+
+  Serial.println("----------------------");
+
+  delay(2000);
+}
+:::
+
+Arduino UNO connections
+PZEM TX → Arduino D10
+PZEM RX → Arduino D11
+PZEM GND → Arduino GND
+PZEM VCC → appropriate supply for your PZEM module
+For the IoT part, an ESP8266 can be added to send these readings to Blynk/ThingSpeak.
+
+⚠️ Do not connect 230-V mains directly to Arduino. The PZEM and mains wiring require proper isolation and electrical protection.
+
+
+ChatGPT is AI and can make mistakes.
+
+No file chosenNo file chosenNo file chosen
+
+Chat with ChatGPT
